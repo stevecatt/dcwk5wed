@@ -1,0 +1,42 @@
+<html>
+<head>
+
+</head>
+<body>
+<div class = "inputs">
+
+<input id= "categories" type="text" placeholder="Enter Store Name"></input>
+<button id = "submitBtn">Add Grocery Store</button>
+<button id = "viewAllCatsBtn">View Categories</button>
+<button id= "deleteSelectionBtn">Detete selected</button>
+</div>
+<div class = "inputs">
+<input id= "groceryItem" type="text" placeholder="Enter Grocery Item "></input>
+
+
+</div>
+<ul id="groceryLists">
+
+
+
+</ul>
+
+
+</body>
+
+<script src="https://www.gstatic.com/firebasejs/5.8.6/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBrQl2vtaHD8Ett3YLwTWE_6tXr2qgaABo",
+    authDomain: "grocerysmc.firebaseapp.com",
+    databaseURL: "https://grocerysmc.firebaseio.com",
+    projectId: "grocerysmc",
+    storageBucket: "grocerysmc.appspot.com",
+    messagingSenderId: "363913951196"
+  };
+  firebase.initializeApp(config);
+</script>
+<script src= "grocery.js"></script>
+
+</html>
