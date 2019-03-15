@@ -5,18 +5,26 @@ let passwordInput = document.getElementById("passwordInput")
 let loginBtn = document.getElementById("loginBtn")
 let registerBtn = document.getElementById("registerBtn")
 let logOutBtn = document.getElementById("logOutBtn")
+let name = document.getElementById("name")
 console.log (emailInput.value)
-
+//registration and new user function
 registerBtn.addEventListener('click',function(){
 
     let email = emailInput.value
     let password = passwordInput.value
   
     firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(function(user) {
-      console.log(user)
-        emailInput.value = ""
-        passwordInput.value = ""
+    .then(function(response) {
+      console.log(response)
+       
+        let uid =  response.user.uid
+        usersRef.push({
+        user: uid,
+        name: name.value
+
+        
+
+      })
     })
     .catch(function(error) {
       // Handle Errors here.
@@ -30,7 +38,7 @@ registerBtn.addEventListener('click',function(){
   
   
   })
-  
+  //login section 
   loginBtn.addEventListener('click',function(){
 
     let email = emailInput.value
@@ -41,17 +49,33 @@ registerBtn.addEventListener('click',function(){
       console.log(response.user.uid)
       
       alert("logged in")
-      
+      //added this to check log on 
+      let uid = response.user.uid
+     
     
-    
-      let uid =  response.user.uid
-      usersRef.push({
-        user: uid
+     usersRef 
+    . on("child_added", function (snapshot){
+      users.push({key: snapshot.key ,value: snapshot.val(),user: snapshot.val().user})
+      console.log(users)
+      console.log(uid)
+      let loggedOnUser = users.filter((user)=>{
+        //console.log(user.value.user)
+        if (user.value.user == uid){
+          //console.log(user)
+          kittyLitter.innerHTML= `<li>${user.value.name}</li>
+          <button onclick="adShopplistBtn('${user.value.user}')">Create Grocery List</button>`
         
-
-        
+          //console.log (user.value.name)
+        }
 
       })
+      
+      })
+    
+
+    
+    
+      
         
     
         
