@@ -9,6 +9,7 @@ let viewAllCatsBtn = document.getElementById("viewAllCatsBtn")
 let deleteSelectionBtn = document.getElementById("deleteSelectionBtn")
 let addGroceryItemBtn = document.getElementById("addGroceryItemBtn")
 let groceryItemInput = document.getElementById("groceryItemInput")
+//let ShoppinItems = document.getElementById("ShoppinItems")
 
 let kittyLitter = document.getElementById("kittyLitter")
 let ShoppinItems = document.getElementById("ShoppinItems")
@@ -42,41 +43,44 @@ let users = []
 
 storesRef 
 .on("child_added" , function(snapshot){
-    stores.push({key: snapshot.key ,value: snapshot.val(),store: snapshot.val().store})
+    stores.push({key: snapshot.key ,value: snapshot.val(),store: snapshot.val().store,uid:snapshot.val().user})
    // console.log(stores) 
-   displayAllStores()
+   displayAllStores(snapshot.val().user)
    storesInput.value =""
   
 })
 
-function displayAllStores() {
-    
-    let storeLitems = stores.map((store) => {
-       // console.log(store.value.user)
+function displayAllStores(uid) {
+    //uses the uid to check to see if the stpre belongs to user
+       //console.log(store.value.user)
+
+    let storeLitems = stores.filter(store=>store.value.user == uid).map(store => {
+         console.log(store.value.user)
         //console.log(store.store)
         
       return `<li>
-          ${store.store} 
-          
-          
+      ${store.store} 
+        
+
       </li>
       <button onclick="addItem('${store.value.user}','${store.store}')">add grocery item</button>
-      `
-     
+    `
     })
-    groceryLists.innerHTML = storeLitems.join('')}
+
+    groceryLists.innerHTML = storeLitems.join('')
+}
 
 //commented out 'cos users is defined by registratiion
-//database.ref("Users")
-//.on("child_added", function (snapshot){
-  //  users.push({key: snapshot.key ,value: snapshot.val(),user: snapshot.val().user})
+database.ref("Users")
+.on("child_added", function (snapshot){
+ users.push({key: snapshot.key ,value: snapshot.val(),user: snapshot.val().user})
     
-  //  displayUsers()
+   displayUsers(snapshot.val().user)
     
-//})//this is a way to get the user id back
+})//this is a way to get the user id back
 
-function displayUsers(){
-    let userLitems = users.map((user) => {
+function displayUsers(uid){
+    let userLitems = users.filter(user => user.value.user ==uid).map(user =>{
         //console.log(user.key)
         //console.log(user.user)
         //console.log(user.value.name)
@@ -117,15 +121,15 @@ function addItem(dog,mouse){
 
 groceryItemsRef
 .on("child_added" , function(snapshot){
-    groceryItems.push({key: snapshot.key ,value: snapshot.val(),item: snapshot.val().item})
+    groceryItems.push({key: snapshot.key ,value: snapshot.val(),item: snapshot.val().item, uid:snapshot.val().userid})
     console.log(groceryItems) 
-   displayGroceries()
+   displayGroceries(snapshot.val().userid)
    groceryItemInput.value=""
 
 })
-
-function displayGroceries(){
-    let groceryLiItems  = groceryItems.map((groc) => {
+// add uid to display the grocery items with that user in them 
+function displayGroceries(uid){
+    let groceryLiItems  = groceryItems.filter(groc=>groc.value.userid== uid).map((groc) => {
        
         return `<li>
             ${groc.value.item} 
@@ -137,5 +141,5 @@ function displayGroceries(){
         
        
       })
-      kittyLitter.innerHTML = groceryLiItems.join('')
+      ShoppinItems.innerHTML = groceryLiItems.join('')
     }
